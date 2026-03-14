@@ -1,5 +1,7 @@
 # openclaw-task-runtime
 
+[中文说明](./README.zh-CN.md) | [One-line prompt](./OPENCLAW_ONE_LINER.md)
+
 A lightweight durable task runtime for OpenClaw.
 
 It adds four missing pieces for long-running work:
