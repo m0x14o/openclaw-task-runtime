@@ -2,7 +2,7 @@
 
 This document defines the adapter contract for `openclaw-task-runtime`.
 
-The runtime stays generic. Each skill provides only a thin `task_resume.py` adapter that knows how to safely resume that skill's phases.
+The runtime stays generic. Each task or skill provides only a thin `task_resume.py` adapter that knows how to safely resume its phases.
 
 ## Execution path
 
@@ -15,8 +15,10 @@ heartbeat -> task_runtime_watch.py -> task_runtime_resume.py -> skill adapter
 You need an adapter when:
 
 - a task wants auto-resume
-- recovery logic depends on skill-specific artifacts or phases
+- recovery logic depends on task-specific artifacts or phases
 - only part of the task is safe to replay
+
+An adapter does not need to live under `skills/`. Any workspace path is fine.
 
 ## Required task-card fields
 

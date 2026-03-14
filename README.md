@@ -37,7 +37,7 @@ Think of it as **LangGraph/Inngest-lite for OpenClaw workspaces**.
 
 Send this **single message** to your own OpenClaw:
 
-> Install and enable https://github.com/m0x14o/openclaw-task-runtime in the current OpenClaw workspace: clone it into `repos/openclaw-task-runtime`, run `python3 install.py`, wire the task runtime recovery check into `HEARTBEAT.md`, and then show me the minimal `task card + resume_adapter` pattern for my next long-running task.
+> Install and enable https://github.com/m0x14o/openclaw-task-runtime in the current OpenClaw workspace: clone it into `repos/openclaw-task-runtime`, run `python3 install.py`, wire the task runtime recovery check into `HEARTBEAT.md`, and if no skill exists for my task, scaffold a temporary resume adapter under `tmp/task-runtime/<task-slug>/task_resume.py`. Then show me the minimal `task card + resume_adapter` pattern for my next long-running task.
 
 If your OpenClaw can run shell commands in its own workspace, that is enough.
 
@@ -68,8 +68,8 @@ heartbeat -> task_runtime_watch.py -> task_runtime_resume.py -> skill adapter
 
 - `scripts/task_runtime.py` — task card / run-state manager
 - `scripts/task_runtime_watch.py` — heartbeat watchdog for stale resumable tasks
-- `scripts/task_runtime_resume.py` — generic dispatcher for per-skill adapters
-- `templates/task_resume.py` — adapter template for your own skill
+- `scripts/task_runtime_resume.py` — generic dispatcher for adapters
+- `templates/task_resume.py` — adapter template for your own task or skill
 
 ## When to use it
 
@@ -98,6 +98,22 @@ Do **not** auto-retry irreversible side effects unless you add your own safety g
 - restarts
 - browser confirmation clicks
 - deleting data
+
+## No skill? Still works
+
+A task does **not** need to be a formal OpenClaw skill to use this runtime.
+
+`resume_adapter` is just a path to a script inside the workspace. It can live in:
+
+- `skills/<skill>/scripts/task_resume.py` for reusable skills
+- `tmp/task-runtime/<task-slug>/task_resume.py` for one-off tasks
+- `automation/<task-slug>/task_resume.py` for repeated but not-yet-packaged flows
+
+### Beginner-friendly pattern
+
+If no skill exists yet, let OpenClaw scaffold a temporary adapter for the current task and keep moving. When the same task repeats enough times, promote that adapter into a real skill.
+
+See also: `docs/no-skill-usage.md`
 
 ## Minimal integration pattern
 

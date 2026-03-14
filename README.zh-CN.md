@@ -41,7 +41,7 @@ OpenClaw 很能干活，但长任务经常会遇到这些破事：
 
 把下面这句话直接发给你自己的 OpenClaw：
 
-> Install and enable https://github.com/m0x14o/openclaw-task-runtime in the current OpenClaw workspace: clone it into `repos/openclaw-task-runtime`, run `python3 install.py`, wire the task runtime recovery check into `HEARTBEAT.md`, and then show me the minimal `task card + resume_adapter` pattern for my next long-running task.
+> Install and enable https://github.com/m0x14o/openclaw-task-runtime in the current OpenClaw workspace: clone it into `repos/openclaw-task-runtime`, run `python3 install.py`, wire the task runtime recovery check into `HEARTBEAT.md`, and if no skill exists for my task, scaffold a temporary resume adapter under `tmp/task-runtime/<task-slug>/task_resume.py`. Then show me the minimal `task card + resume_adapter` pattern for my next long-running task.
 
 如果你的 OpenClaw 能在自己的 workspace 里执行 shell，这一句通常就够了。
 
@@ -73,7 +73,7 @@ heartbeat -> task_runtime_watch.py -> task_runtime_resume.py -> skill adapter
 - `scripts/task_runtime.py`：任务卡 / run-state 管理器
 - `scripts/task_runtime_watch.py`：heartbeat 看门狗，负责巡检 stale 任务
 - `scripts/task_runtime_resume.py`：通用恢复 dispatcher
-- `templates/task_resume.py`：你自己的 skill adapter 模板
+- `templates/task_resume.py`：给你自己的任务或 skill 用的 adapter 模板
 
 ## 什么时候适合用
 
@@ -102,6 +102,22 @@ heartbeat -> task_runtime_watch.py -> task_runtime_resume.py -> skill adapter
 - 重启
 - 浏览器确认点击
 - 删除数据
+
+## 没做成 skill，也能用
+
+任务**不需要先做成正式 skill**，也能吃到这套 runtime。
+
+`resume_adapter` 本质上只是一个脚本路径，它可以放在：
+
+- `skills/<skill>/scripts/task_resume.py`：适合可复用 skill
+- `tmp/task-runtime/<task-slug>/task_resume.py`：适合一次性长任务
+- `automation/<task-slug>/task_resume.py`：适合重复出现但还没正式封装的流程
+
+### 给小白最友好的方式
+
+如果还没有 skill，就先让 OpenClaw 为当前任务生成一个临时 adapter，先跑起来。等这类任务反复出现，再把它升级成正式 skill。
+
+更多说明见：`docs/no-skill-usage.md`
 
 ## 最小接入方式
 
