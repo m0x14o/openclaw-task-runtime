@@ -1,6 +1,6 @@
 # openclaw-task-runtime
 
-[English README](./README.md) | [快速上手](./QUICKSTART.zh-CN.md) | [复制即用提示词](./OPENCLAW_ONE_LINER.md)
+[English README](./README.md) | [快速上手](./QUICKSTART.zh-CN.md) | [复制即用提示词（中文）](./OPENCLAW_ONE_LINER.zh-CN.md) | [Copy-paste prompts (EN)](./OPENCLAW_ONE_LINER.md)
 
 一个给 **OpenClaw** 用的轻量长任务运行层。
 
@@ -10,15 +10,15 @@
 
 ### 1）一句话安装
 
-> Install and enable https://github.com/m0x14o/openclaw-task-runtime in the current OpenClaw workspace: clone it into `repos/openclaw-task-runtime`, run `python3 install.py`, wire the task runtime recovery check into `HEARTBEAT.md`, and confirm it is ready.
+> 帮我把 https://github.com/m0x14o/openclaw-task-runtime 装到当前 OpenClaw 工作区里：克隆到 `repos/openclaw-task-runtime`，运行 `python3 install.py`，把任务恢复检查接到 `HEARTBEAT.md`，然后告诉我已经可以用了。
 
 ### 2）一句话把一个已有 skill 接进来
 
-> Connect the `<skill-name>` skill to https://github.com/m0x14o/openclaw-task-runtime in the current OpenClaw workspace: create a `task_resume.py` adapter from the installed template, add task cards and checkpoints for long-running phases, enable heartbeat-based auto-resume only for safe phases, update the skill docs with the minimal usage, and then show me exactly how to use it.
+> 帮我把 `<skill-name>` 接到 `openclaw-task-runtime`：用模板生成 `task_resume.py`，给长任务阶段加 task card 和 checkpoint，只对安全阶段开自动续跑，顺手把最简用法写进这个 skill 的文档，最后直接告诉我以后怎么用。
 
 ### 3）一句话执行一个临时长任务（哪怕还没做成 skill）
 
-> Run this as a resumable long task under openclaw-task-runtime in the current OpenClaw workspace. If no skill exists yet, scaffold a temporary adapter under `tmp/task-runtime/<task-slug>/task_resume.py`, create a task card, checkpoint the safe phases, enable heartbeat auto-resume, and at minimum leave me either a final result, a partial result, or a clear block report: <在这里替换成你的任务>
+> 把下面这件事按“可续跑的长任务”来跑：如果还没有 skill，就先在 `tmp/task-runtime/<task-slug>/task_resume.py` 生成一个临时 adapter，建 task card，给安全阶段打 checkpoint，开 heartbeat 自动续跑。最少给我三种结果之一：最终结果 / 部分结果 / 明确卡点。任务是：<在这里替换成你的任务>
 
 你**不需要先理解** task card、checkpoint、adapter 这些词。先复制一句跑起来就行。
 
@@ -57,11 +57,9 @@ OpenClaw 很能干活，但长任务经常会遇到这些破事：
 
 ## 一句话用法
 
-把下面这句话直接发给你自己的 OpenClaw：
+如果你只想直接复制，优先看这里：`OPENCLAW_ONE_LINER.zh-CN.md`
 
-> Install and enable https://github.com/m0x14o/openclaw-task-runtime in the current OpenClaw workspace: clone it into `repos/openclaw-task-runtime`, run `python3 install.py`, wire the task runtime recovery check into `HEARTBEAT.md`, and if no skill exists for my task, scaffold a temporary resume adapter under `tmp/task-runtime/<task-slug>/task_resume.py`. Then show me the minimal `task card + resume_adapter` pattern for my next long-running task.
-
-如果你的 OpenClaw 能在自己的 workspace 里执行 shell，这一句通常就够了。
+如果你的 OpenClaw 能在自己的 workspace 里执行 shell，上面那 3 句通常就够了。
 
 ## 手动安装
 
