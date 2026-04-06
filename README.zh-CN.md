@@ -2,7 +2,7 @@
 
 [English README](./README.md) | [快速上手](./QUICKSTART.zh-CN.md) | [复制即用提示词（中文）](./OPENCLAW_ONE_LINER.zh-CN.md) | [Copy-paste prompts (EN)](./OPENCLAW_ONE_LINER.md)
 
-一个给 **OpenClaw** 用的轻量长任务运行层。
+一个给 **OpenClaw** 用的轻量长任务恢复层。
 
 ## 给小白的 3 句话
 
@@ -10,27 +10,27 @@
 
 ### 1）一句话安装
 
-> 帮我把 https://github.com/m0x14o/openclaw-task-runtime 装到当前 OpenClaw 工作区里：克隆到 `repos/openclaw-task-runtime`，运行 `python3 install.py`，把任务恢复检查接到 `HEARTBEAT.md`，然后告诉我已经可以用了。
+> 帮我把 https://github.com/m0x14o/openclaw-task-runtime 装到当前 OpenClaw 工作区里：克隆到 `repos/openclaw-task-runtime`，运行 `python3 install.py`，把恢复检查接到 `HEARTBEAT.md`，然后告诉我已经可以用了。
 
 ### 2）一句话把一个已有 skill 接进来
 
-> 帮我把 `<skill-name>` 接到 `openclaw-task-runtime`：用模板生成 `task_resume.py`，给长任务阶段加 task card 和 checkpoint，只对安全阶段开自动续跑，顺手把最简用法写进这个 skill 的文档，最后直接告诉我以后怎么用。
+> 帮我把 `<skill-name>` 接到 `openclaw-task-runtime`：用模板生成 `task_resume.py`，给长任务阶段加 run card 和 checkpoint，只对安全阶段开自动续跑，顺手把最简用法写进这个 skill 的文档，最后直接告诉我以后怎么用。
 
 ### 3）一句话执行一个临时长任务（哪怕还没做成 skill）
 
-> 把下面这件事按“可续跑的长任务”来跑：如果还没有 skill，就先在 `tmp/task-runtime/<task-slug>/task_resume.py` 生成一个临时 adapter，建 task card，给安全阶段打 checkpoint，开 heartbeat 自动续跑。最少给我三种结果之一：最终结果 / 部分结果 / 明确卡点。任务是：<在这里替换成你的任务>
+> 把下面这件事按“可续跑的长任务”来跑：如果还没有 skill，就先在 `tmp/task-runtime/<task-slug>/task_resume.py` 生成一个临时 adapter，建 run card，给安全阶段打 checkpoint，开 heartbeat 自动续跑。最少给我三种结果之一：最终结果 / 部分结果 / 明确卡点。任务是：<在这里替换成你的任务>
 
-你**不需要先理解** task card、checkpoint、adapter 这些词。先复制一句跑起来就行。
+你**不需要先理解** run card、checkpoint、adapter 这些词。先复制一句跑起来就行。
 
 它补的是长任务最容易掉链子的几件事：
 
-- 持久化任务卡（`data/task-runs/*.json`）
+- 持久化 run card（`data/task-runs/*.json`）
 - checkpoint
 - heartbeat 巡检卡死任务
 - 通过 skill adapter 做安全自动续跑
 - watchdog 信号，把“闷声卡住”变成可见的 `alerts / recoveries / needs_attention`
 
-这不是业务 skill，而是一个 **workspace 级 runtime**。任何 skill 都可以接进来。
+这不是业务 skill，而是一个 **workspace 级恢复层**。任何 skill 都可以接进来。
 
 ## 这东西解决什么问题
 
@@ -41,7 +41,7 @@ OpenClaw 很能干活，但长任务经常会遇到这些破事：
 - 最贵的前半段都跑完了，结果渲染最后一步炸了
 - 一个任务明明适合分阶段恢复，却只能当成一坨黑箱重来
 
-`openclaw-task-runtime` 的目标，就是给 OpenClaw 补一个小而实用的 durable execution 层，不引入一整套重型工作流平台。
+`openclaw-task-runtime` 的目标，就是给 OpenClaw 补一个小而实用的 durable recovery 层，不引入一整套重型工作流平台。
 
 ## 它不是什么
 
@@ -54,7 +54,7 @@ OpenClaw 很能干活，但长任务经常会遇到这些破事：
 
 更准确地说，它是：
 
-> **给 OpenClaw workspace 用的 LangGraph / Inngest-lite**
+> **给 OpenClaw workspace 用的小型恢复层**，更接近 LangGraph / Inngest-lite，而不是完整 orchestrator
 
 ## 一句话用法
 
@@ -77,7 +77,7 @@ python3 install.py
 - 复制 runtime 脚本到 `<workspace>/scripts/`
 - 复制文档到 `<workspace>/docs/openclaw-task-runtime/`
 - 复制 adapter 模板到 `<workspace>/templates/openclaw-task-runtime/`
-- 以幂等方式追加或刷新 `<workspace>/HEARTBEAT.md` 里的 Task Runtime Recovery Check
+- 以幂等方式追加或刷新 `<workspace>/HEARTBEAT.md` 里的 Task Recovery Check
 
 ## 工作方式
 
@@ -87,7 +87,7 @@ heartbeat -> task_runtime_watch.py -> task_runtime_resume.py -> skill adapter
 
 ### 核心文件
 
-- `scripts/task_runtime.py`：任务卡 / run-state 管理器
+- `scripts/task_runtime.py`：run card / run-state 管理器
 - `scripts/task_runtime_watch.py`：heartbeat 看门狗，负责巡检 stale 任务
 - `scripts/task_runtime_resume.py`：通用恢复 dispatcher
 - `templates/task_resume.py`：给你自己的任务或 skill 用的 adapter 模板
@@ -148,7 +148,7 @@ heartbeat 看门狗现在会给出三类高信号结果：
 
 ## 最小接入方式
 
-### 1）创建 task card
+### 1）创建 run card
 
 ```bash
 python3 ~/.openclaw/workspace/scripts/task_runtime.py create \
@@ -184,10 +184,12 @@ cp ~/.openclaw/workspace/templates/openclaw-task-runtime/task_resume.py \
 
 ## Adapter 契约
 
+平台级调度还是交给 OpenClaw 原生 cron、session、background task。这套东西只负责上层业务恢复。
+
 你的 adapter 至少要做到：
 
 1. 接受 `--task-id` 和可选 `--timeout-seconds`
-2. 读取 task card
+2. 读取 run card
 3. 只恢复安全 / 幂等 phase
 4. 更新 `status`、`phase`、`artifacts`、`last_checkpoint_at`
 5. 尽量把结果以 JSON 打到 stdout

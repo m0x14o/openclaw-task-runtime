@@ -11,8 +11,8 @@ import shutil
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent
-HEARTBEAT_SECTION_TITLE = "## Task Runtime Recovery Check"
-HEARTBEAT_BLOCK_TEMPLATE = """## Task Runtime Recovery Check
+HEARTBEAT_SECTION_TITLE = "## Task Recovery Check"
+HEARTBEAT_BLOCK_TEMPLATE = """## Task Recovery Check
 Run:
 
 ```bash
@@ -28,7 +28,7 @@ If it reports no actionable signals, move on without mentioning it.
 """
 
 
-SECTION_RE = re.compile(r"(?ms)^## Task Runtime Recovery Check\n.*?(?=^##\s|\Z)")
+SECTION_RE = re.compile(r"(?ms)^## (?:Task Runtime Recovery Check|Task Recovery Check)\n.*?(?=^##\s|\Z)")
 
 
 def discover_workspace(start: Path) -> Path | None:

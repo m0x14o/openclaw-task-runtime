@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Heartbeat helper for inspecting and auto-resuming stale task cards.
+"""Heartbeat helper for inspecting and auto-resuming stale run cards.
 
 The watchdog emits three high-signal buckets for heartbeat summarization:
 - alerts: a task went silent / stale this round
@@ -279,7 +279,7 @@ def maybe_emit_attention(
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Inspect task cards and optionally auto-resume stale safe tasks")
+    parser = argparse.ArgumentParser(description="Inspect run cards and optionally auto-resume stale safe tasks")
     parser.add_argument("--task-type")
     parser.add_argument("--auto-resume", action="store_true")
     parser.add_argument("--dry-run", action="store_true")

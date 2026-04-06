@@ -1,8 +1,8 @@
-# Task Runtime Adapters
+# Task Recovery Adapters
 
 This document defines the adapter contract for `openclaw-task-runtime`.
 
-The runtime stays generic. Each task or skill provides only a thin `task_resume.py` adapter that knows how to safely resume its phases.
+The recovery layer stays generic. Each task or skill provides only a thin `task_resume.py` adapter that knows how to safely resume its phases.
 
 ## Execution path
 
@@ -20,7 +20,7 @@ You need an adapter when:
 
 An adapter does not need to live under `skills/`. Any workspace path is fine.
 
-## Required task-card fields
+## Required run-card fields
 
 For resumable work, populate at least:
 
@@ -45,7 +45,7 @@ python3 <adapter> --task-id <task_id> [--timeout-seconds 180]
 
 An adapter should:
 
-1. load the task card
+1. load the run card
 2. inspect `phase` and `artifacts`
 3. resume only safe/idempotent phases
 4. call existing skill logic or scripts
@@ -84,3 +84,7 @@ Most auto-resume work should happen in `collect`, `analyze`, or `render`.
 ## Template
 
 Use `templates/task_resume.py` as a starting point.
+
+## Boundary
+
+Adapters handle business recovery only. They should not become schedulers or replace OpenClaw's native cron, session, or background execution paths.

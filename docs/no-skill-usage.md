@@ -30,7 +30,7 @@ If the task repeats, then promote it into a proper skill.
 
 Send this to your own OpenClaw:
 
-> Install and enable https://github.com/m0x14o/openclaw-task-runtime in the current OpenClaw workspace: clone it into `repos/openclaw-task-runtime`, run `python3 install.py`, wire the task runtime recovery check into `HEARTBEAT.md`, and if no skill exists for this task, create a temporary resume adapter under `tmp/task-runtime/<task-slug>/task_resume.py`, create a task card, checkpoint safe phases, and run this job under task runtime so it can resume automatically.
+> Install and enable https://github.com/m0x14o/openclaw-task-runtime in the current OpenClaw workspace: clone it into `repos/openclaw-task-runtime`, run `python3 install.py`, wire the task recovery check into `HEARTBEAT.md`, and if no skill exists for this task, create a temporary resume adapter under `tmp/task-runtime/<task-slug>/task_resume.py`, create a run card, checkpoint safe phases, and run this job under the recovery layer so it can resume automatically.
 
 ## Minimal ad-hoc example
 
@@ -42,7 +42,7 @@ cp ~/.openclaw/workspace/templates/openclaw-task-runtime/task_resume.py \
   ~/.openclaw/workspace/tmp/task-runtime/my-task/task_resume.py
 ```
 
-### 2. Create a task card that points to that temporary adapter
+### 2. Create a run card that points to that temporary adapter
 
 ```bash
 python3 ~/.openclaw/workspace/scripts/task_runtime.py create \
@@ -64,4 +64,4 @@ Move the adapter into a real skill:
 skills/<your-skill>/scripts/task_resume.py
 ```
 
-That is all. The runtime layer stays the same.
+That is all. The recovery layer stays the same.

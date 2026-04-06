@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Generic resume dispatcher for task-runtime adapters.
+"""Generic resume dispatcher for task recovery adapters.
 
-Each task card may declare a `resume_adapter` path. This dispatcher loads the
+Each run card may declare a `resume_adapter` path. This dispatcher loads the
 card, resolves the adapter command, and passes `--task-id` through so the
 adapter can recover the specific phase safely.
 """
@@ -38,7 +38,7 @@ def parse_child_output(stdout: str) -> Any:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Dispatch a task card to its configured resume adapter")
+    parser = argparse.ArgumentParser(description="Dispatch a run card to its configured resume adapter")
     parser.add_argument("--task-id", required=True)
     parser.add_argument("--timeout-seconds", type=int, default=180)
     args = parser.parse_args()

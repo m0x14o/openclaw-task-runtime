@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Lightweight task-run state manager for long-running OpenClaw work.
+"""Lightweight run-card state manager for long-running OpenClaw work.
 
-This keeps durable task cards in data/task-runs so heartbeat checks can
+This keeps durable run cards in data/task-runs so heartbeat checks can
 inspect progress, detect stale runs, and trigger safe resume commands.
 """
 
@@ -469,10 +469,10 @@ def cmd_stale(args: argparse.Namespace) -> dict[str, Any]:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Manage durable task cards for long-running work")
+    parser = argparse.ArgumentParser(description="Manage durable run cards for long-running work")
     sub = parser.add_subparsers(dest="command", required=True)
 
-    create = sub.add_parser("create", help="Create a new task card")
+    create = sub.add_parser("create", help="Create a new run card")
     create.add_argument("--task-id")
     create.add_argument("--task-type", required=True)
     create.add_argument("--title", required=True)
@@ -561,11 +561,11 @@ def build_parser() -> argparse.ArgumentParser:
     fail.add_argument("--allow-auto-resume", action=argparse.BooleanOptionalAction, default=False)
     fail.set_defaults(func=lambda args: update_card(args.task_id, args, event="failed", checkpoint=False))
 
-    inspect = sub.add_parser("inspect", help="Show full task card")
+    inspect = sub.add_parser("inspect", help="Show full run card")
     inspect.add_argument("task_id")
     inspect.set_defaults(func=cmd_inspect)
 
-    list_cmd = sub.add_parser("list", help="List task cards")
+    list_cmd = sub.add_parser("list", help="List run cards")
     list_cmd.add_argument("--task-type")
     list_cmd.add_argument("--status")
     list_cmd.add_argument("--only-stale", action="store_true")

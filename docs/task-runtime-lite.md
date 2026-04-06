@@ -1,10 +1,10 @@
-# Task Runtime Lite
+# Task Recovery Layer Lite
 
-`openclaw-task-runtime` is a small durable execution layer for OpenClaw workspaces.
+`openclaw-task-runtime` is a small durable recovery layer for OpenClaw workspaces.
 
 It provides:
 
-- task cards (`data/task-runs/*.json`)
+- run cards (`data/task-runs/*.json`)
 - checkpoints
 - heartbeat-based stale detection
 - safe auto-resume via adapters
@@ -26,12 +26,12 @@ After `python3 install.py`, the important pieces land in:
 
 Heartbeat runs the watchdog globally, but a task is only auto-managed when all of these are true:
 
-1. a task card exists
+1. a run card exists
 2. `allow_auto_resume = true`
 3. the task has `resume_adapter` (or explicit `resume_command`)
 4. the current phase is safe to retry
 
-## Core task-card fields
+## Core run-card fields
 
 - `id`
 - `task_type`
@@ -54,7 +54,7 @@ Heartbeat runs the watchdog globally, but a task is only auto-managed when all o
 The installer appends or refreshes this section in `HEARTBEAT.md`:
 
 ````md
-## Task Runtime Recovery Check
+## Task Recovery Check
 Run:
 
 ```bash
@@ -81,7 +81,7 @@ For manual debugging, the report also includes `active_needs_attention`, which s
 
 ## Minimal commands
 
-### Create a task card
+### Create a run card
 
 ```bash
 python3 ~/.openclaw/workspace/scripts/task_runtime.py create \
@@ -115,3 +115,8 @@ python3 ~/.openclaw/workspace/scripts/task_runtime.py stale --require-resume-com
 ```bash
 python3 ~/.openclaw/workspace/scripts/task_runtime_watch.py --auto-resume
 ```
+
+## Boundary
+
+OpenClaw itself should remain the platform scheduler, including cron, sessions, and background tasks.
+This layer exists to keep business recovery state, checkpoints, and safe resume paths auditable.

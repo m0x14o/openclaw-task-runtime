@@ -2,7 +2,7 @@
 
 [中文说明](./README.zh-CN.md) | [Quickstart](./QUICKSTART.md) | [One-line prompts](./OPENCLAW_ONE_LINER.md)
 
-A lightweight durable task runtime for OpenClaw.
+A lightweight durable task recovery layer for OpenClaw.
 
 ## 3 copy-paste prompts for beginners
 
@@ -10,27 +10,27 @@ If you do not want to read docs, copy **one** of these to your own OpenClaw.
 
 ### 1) One-line install
 
-> Install and enable https://github.com/m0x14o/openclaw-task-runtime in the current OpenClaw workspace: clone it into `repos/openclaw-task-runtime`, run `python3 install.py`, wire the task runtime recovery check into `HEARTBEAT.md`, and confirm it is ready.
+> Install and enable https://github.com/m0x14o/openclaw-task-runtime in the current OpenClaw workspace: clone it into `repos/openclaw-task-runtime`, run `python3 install.py`, wire the task recovery check into `HEARTBEAT.md`, and confirm it is ready.
 
 ### 2) One-line skill integration
 
-> Connect the `<skill-name>` skill to https://github.com/m0x14o/openclaw-task-runtime in the current OpenClaw workspace: create a `task_resume.py` adapter from the installed template, add task cards and checkpoints for long-running phases, enable heartbeat-based auto-resume only for safe phases, update the skill docs with the minimal usage, and then show me exactly how to use it.
+> Connect the `<skill-name>` skill to https://github.com/m0x14o/openclaw-task-runtime in the current OpenClaw workspace: create a `task_resume.py` adapter from the installed template, add run cards and checkpoints for long-running phases, enable heartbeat-based auto-resume only for safe phases, update the skill docs with the minimal usage, and then show me exactly how to use it.
 
 ### 3) One-line temporary long task
 
-> Run this as a resumable long task under openclaw-task-runtime in the current OpenClaw workspace. If no skill exists yet, scaffold a temporary adapter under `tmp/task-runtime/<task-slug>/task_resume.py`, create a task card, checkpoint the safe phases, enable heartbeat auto-resume, and at minimum leave me either a final result, a partial result, or a clear block report: <replace this with your task>
+> Run this as a resumable long task under openclaw-task-runtime in the current OpenClaw workspace. If no skill exists yet, scaffold a temporary adapter under `tmp/task-runtime/<task-slug>/task_resume.py`, create a run card, checkpoint the safe phases, enable heartbeat auto-resume, and at minimum leave me either a final result, a partial result, or a clear block report: <replace this with your task>
 
-You do **not** need to understand task cards, checkpoints, or adapters before trying it.
+You do **not** need to understand run cards, checkpoints, or adapters before trying it.
 
 It adds five missing pieces for long-running work:
 
-- durable task cards (`data/task-runs/*.json`)
+- durable run cards (`data/task-runs/*.json`)
 - checkpoints
 - heartbeat-based stale detection
 - safe auto-resume through skill adapters
 - watchdog signals so silent stalls become visible (`alerts`, `recoveries`, `needs_attention`)
 
-This is **not** a business skill. It is a **workspace-level runtime** that any skill can plug into.
+This is **not** a business skill. It is a **workspace-level recovery layer** that any skill can plug into.
 
 ## What problem this solves
 
@@ -41,7 +41,7 @@ OpenClaw is great at doing work, but long jobs can still get messy:
 - report rendering fails after the expensive part already finished
 - a task needs resumable phases instead of one giant black box
 
-`openclaw-task-runtime` gives OpenClaw a small durable execution layer without introducing a heavy workflow platform.
+`openclaw-task-runtime` gives OpenClaw a small durable recovery layer without introducing a heavy workflow platform.
 
 ## What this is not
 
@@ -50,7 +50,7 @@ OpenClaw is great at doing work, but long jobs can still get messy:
 - not a generic DAG engine
 - not a business-specific skill
 
-Think of it as **LangGraph/Inngest-lite for OpenClaw workspaces**.
+Think of it as **a small recovery layer for OpenClaw workspaces**, closer to LangGraph/Inngest-lite than to a full orchestrator.
 
 ## One-line usage
 
@@ -75,7 +75,7 @@ The installer will:
 - copy runtime scripts into `<workspace>/scripts/`
 - copy docs into `<workspace>/docs/openclaw-task-runtime/`
 - copy an adapter template into `<workspace>/templates/openclaw-task-runtime/`
-- append or refresh an idempotent Task Runtime Recovery Check section in `<workspace>/HEARTBEAT.md`
+- append or refresh an idempotent Task Recovery Check section in `<workspace>/HEARTBEAT.md`
 
 ## How it works
 
@@ -85,7 +85,7 @@ heartbeat -> task_runtime_watch.py -> task_runtime_resume.py -> skill adapter
 
 ### Core files
 
-- `scripts/task_runtime.py` — task card / run-state manager
+- `scripts/task_runtime.py` — run card / run-state manager
 - `scripts/task_runtime_watch.py` — heartbeat watchdog for stale resumable tasks
 - `scripts/task_runtime_resume.py` — generic dispatcher for adapters
 - `templates/task_resume.py` — adapter template for your own task or skill
@@ -146,7 +146,7 @@ See also: `docs/no-skill-usage.md`
 
 ## Minimal integration pattern
 
-### 1. Create a task card
+### 1. Create a run card
 
 ```bash
 python3 ~/.openclaw/workspace/scripts/task_runtime.py create \
@@ -182,10 +182,12 @@ Then teach that adapter how to safely recover the resumable phases for your skil
 
 ## Adapter contract
 
+Platform scheduling still belongs to OpenClaw itself, such as cron, sessions, and background tasks. This repo is the recovery layer that sits on top of those execution paths.
+
 Your adapter must:
 
 1. accept `--task-id` and optional `--timeout-seconds`
-2. load the task card
+2. load the run card
 3. resume only safe/idempotent phases
 4. update `status`, `phase`, `artifacts`, and `last_checkpoint_at`
 5. return JSON on stdout when possible

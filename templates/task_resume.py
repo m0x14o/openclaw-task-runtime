@@ -64,7 +64,7 @@ def resume_render(card: dict) -> dict:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Template task-runtime adapter")
+    parser = argparse.ArgumentParser(description="Template task recovery adapter")
     parser.add_argument("--task-id", required=True)
     parser.add_argument("--timeout-seconds", type=int, default=180)
     args = parser.parse_args()
